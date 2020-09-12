@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<audio id="myAudio">
+  <source src="audio/some.mp3" type="audio/mp3">
+  <source src="audio/some.mp3" type="audio/mp3">
+  Your browser does not support the audio element.
+</audio>
+
+<p>Click the buttons to play or pause the audio.</p>
+
+<button onclick="playAudio()" type="button">Play Audio</button>
+<button onclick="pauseAudio()" type="button">Pause Audio</button> 
+
+<script src="main.js"></script>
+<br>
+<h1>Upload via php-server</h1>
+
+<form method="post" enctype="multipart/form-data">
+  <input type="file" name="files[]" multiple>
+  <input type="submit" value="Upload File" name="submit">
+</form>
+
+<script src="upload.js"></script>
+</body>
+</html>
