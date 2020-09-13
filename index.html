@@ -1,27 +1,67 @@
 <!DOCTYPE html>
 <html>
+<head>
+
+</head>
 <body>
 
-<audio id="myAudio">
-  <source src="audio/some.mp3" type="audio/mp3">
-  <source src="audio/some.mp3" type="audio/mp3">
-  Your browser does not support the audio element.
-</audio>
 
-<p>Click the buttons to play or pause the audio.</p>
+  <!-- <audio id="myAudio">
+    <source src="audio/some.mp3" type="audio/mp3">
+    <source src="audio/some.mp3" type="audio/mp3">
+    Your browser does not support the audio element.
+  </audio> -->
 
-<button onclick="playAudio()" type="button">Play Audio</button>
-<button onclick="pauseAudio()" type="button">Pause Audio</button> 
+  <select id="mySelect" onchange="myFunction()">
+    <option selected value="Bitte Auswählen">Bitte Auswählen"</option>
+    <option  value="R.mp3">Yellow submarine</option>
+    <option value="some.mp3">Hillsong</option>
+  </select>
+  
+  <p>Click the buttons to play or puse the audio.</p>
 
-<script src="main.js"></script>
-<br>
-<h1>Upload via php-server</h1>
+  <p id="demo"></p>
+  <script>
+    var fs = require('fs');
 
-<form method="post" enctype="multipart/form-data">
-  <input type="file" name="files[]" multiple>
-  <input type="submit" value="Upload File" name="submit">
-</form>
 
-<script src="upload.js"></script>
+
+
+    function myFunction() {
+      var x = document.getElementById("mySelect").value;
+      document.getElementById("demo").innerHTML = "You selected: " + x;
+
+      if(document.getElementById("myAudio") != null){
+        document.getElementById("myAudio").remove();
+      }
+
+      let audio_section    = document.createElement("audio");
+      let audio_source     = document.createElement("source");
+
+
+      audio_section.setAttribute("id","myAudio");
+      audio_source.setAttribute("src","audio/"+x);
+      audio_source.setAttribute("type","audio/mp3");
+
+      document.body.appendChild(audio_section);
+      audio_section.appendChild(audio_source);
+    }
+
+    function playAudio() { 
+      document.getElementById("myAudio").play(); 
+    } 
+    function pauseAudio() { 
+      document.getElementById("myAudio").pause(); 
+    } 
+
+  </script>
+
+
+    <button onclick="playAudio()" type="button">Play Audio</button>
+    <button onclick="pauseAudio()" type="button">Pause Audio</button>
+
+  
+    <br>
+
 </body>
 </html>
