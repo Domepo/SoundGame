@@ -1,0 +1,23 @@
+<h1>aa</h1>
+<button onclick=" fetchTest(1)" >Start</button>
+<button onclick=" fetchTest(2)" >Stop</button>
+<button onclick=" fetchTest(3)" >Quit</button>
+
+
+<script>
+
+
+    function fetchTest(inputdata){
+        fetch("/api",{
+            method: "POST",
+            headers:{
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: inputdata
+            })
+        }).catch((err)=>console.log(err));
+    };
+
+ 
+</script>
