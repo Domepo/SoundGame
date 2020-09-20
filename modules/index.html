@@ -1,14 +1,17 @@
 <h1>aa</h1>
-<button onclick=" fetchTest(1)" >Start</button>
-<button onclick=" fetchTest(2)" >Stop</button>
-<button onclick=" fetchTest(3)" >Quit</button>
-
+<button onclick=" fetchAudioControl(1)" >Start</button>
+<button onclick=" fetchAudioControl(2)" >Stop</button>
+<button onclick=" fetchAudioControl(3)" >Quit</button>
+<br>
+<p1 id="ii"></p1>
+<br>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 
 <script>
 
 
-    function fetchTest(inputdata){
-        fetch("/api",{
+   async function fetchAudioControl(inputdata){
+    await fetch("/api",{
             method: "POST",
             headers:{
                 "Content-Type": "application/json"
@@ -16,8 +19,46 @@
             body: JSON.stringify({
                 name: inputdata
             })
-        }).catch((err)=>console.log(err));
+        })
+        // .then(response =>{console.log(response);})
+        .catch((err)=>console.log(err));
+    
     };
 
- 
+    async function fetchFileInDir(){
+        const response = await fetch("/dir",{
+                method: "POST",
+                headers:{
+                    "Content-Type": "application/json"
+                }
+            })
+            // .then(response =>{console.log(response);})
+            // .catch((err)=>console.log(err));
+
+        const responseArray = await response.json();
+        const responseFiles = responseArray.files;
+
+        // responseFiles.forEach(element => {
+        //     console.log(element);
+        // });
+        return responseFiles;
+    };
+
+    const eachFileInDir = fetchFileInDir()
+    .then(res =>{
+        res.forEach(element =>{
+            console.log(element)
+        });
+            var a = document.getElementById("ii");
+            a.innerHTML = res[1];
+    });
+
+
 </script>
+<form ref='uploadForm' 
+id='uploadForm' 
+action='http://192.168.2.139:8080/upload' 
+method='post' 
+encType="multipart/form-data">
+  <input type="file" name="sampleFile" />
+  <input type='submit' value='Upload!' />
