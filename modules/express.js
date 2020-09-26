@@ -21,7 +21,7 @@ app.post("/api",(request, response)=>{
     if(request.body.name == 2){
         audioControl.pause(filename);
     }
-    // return response.send('Received a POST HTTP method');
+    return response.send('something'); // provide break after 6 inputs
 
 });
 
