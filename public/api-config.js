@@ -3,7 +3,7 @@
 
 async function AudioControl(state){
     // get the button data for play pause and stop
-    await fetch("/api",{
+    await fetch("/audio-controll",{
             method: "POST",
             headers:{
                 "Content-Type": "application/json"
@@ -13,7 +13,6 @@ async function AudioControl(state){
             })
         })
         .catch((err)=>console.log(err));
-    
     };
 
     async function FilesInDirectory(){
@@ -30,9 +29,27 @@ async function AudioControl(state){
     };
 
     const eachFileInDirectory = FilesInDirectory()
-    // get the latest file in the directoryPath -> ./index.js
+    // get the latest file in the directoryPath -> ./app.js
     .then(response =>{
             let ShowDirectoryElement = document.getElementById("showdirectory");
-            console.log(response.length+"files are Uploaded");
+            console.log(response.length+" files are Uploaded");
             ShowDirectoryElement.innerHTML = response[1];
+    });
+
+
+    // get data from song-properties.json
+    async function songProperties(){
+        const response = await fetch("/dir/json",{
+                method: "POST",
+                headers:{
+                    "Content-Type": "application/json"
+                }
+            })
+        const responseArray = await response.json();
+        return responseArray;
+    };
+
+    const songPropertiesProm = songProperties()
+    .then(response =>{
+            console.log(response);
     });
