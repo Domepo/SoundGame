@@ -36,35 +36,40 @@ app.post('/upload', function(req, res) {
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).send('No files were uploaded.');
   }
-
-  // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
   let sampleFile = req.files.sampleFile;
+  let refrainTimeSeconds = req.body.refrainTimeSeconds;
+  let refrainTimeMinutes = req.body.refrainTimeMinutes;
 
-  console.log(req.body.sampleLength);
-
-  // Use the mv() method to place the file somewhere on your server
   sampleFile.mv('audio/'+sampleFile.name, function(err) {
     if (err)
       return res.status(500).send(err);
 
     res.send('File uploaded!');
-    // uploadStorage(sampleFile);
-    let test = 'audio/'+sampleFile.name;
-    uploadStorage(sampleFile)
+    uploadStorage(sampleFile,refrainTimeSeconds,refrainTimeMinutes)
 
 
   });
 });
 
 
-function uploadStorage(file){
+function uploadStorage(file,seconds,minutes){
     // Identifier
-    let idForUploadStorage = Object.keys(store.data).length;
     let FileNameWithoutExtension = file.name.split('.').slice(0, -1).join('.');
     
     store.set(String(FileNameWithoutExtension)); 
-    store.set(String(FileNameWithoutExtension)+".time"," String(ou)"); 
+    store.set(String(FileNameWithoutExtension)+".refrainDrop"); 
+    store.set(String(FileNameWithoutExtension)+".refrainDrop.Minutes", String(minutes)); 
+    store.set(String(FileNameWithoutExtension)+".refrainDrop.Seconds", String(seconds)); 
+    store.set(String(FileNameWithoutExtension)+".refrainDrop.ResolutionDuration",String(resultionCalculator(seconds,minutes)));
     store.set(String(FileNameWithoutExtension)+".name", String(file.name)); 
+}
+function resultionCalculator(seconds,minutes){
+  // One frame = 0.026 seconds
+  // We use the default 44khz audio sequenze
+  let defaultFrameLentgh = 0.026;
+  let totalSeconds       = (minutes * 60) + seconds;
+  let totalFrame         = Math.round(totalSeconds / defaultFrameLentgh);
+  return totalFrame;
 }
 
 // Search in dic
