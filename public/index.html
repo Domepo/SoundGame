@@ -1,14 +1,10 @@
 <h1>SoundGame</h1>
 
-<!-- Play Pause Stop buttons -->
-<button onclick=" AudioControl(1)" >Play</button>
-<button onclick=" AudioControl(2)" >Pause</button>
-<button onclick=" AudioControl(3)" >Quit</button>
+
 
 <!-- Upload inputname -->
-<br>
+
 <p1 id="showdirectory"></p1>
-<br>
 
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="api-config.js"></script>
@@ -23,4 +19,20 @@ encType="multipart/form-data">
   <input type="text" name="refrainTimeMinutes" />
   <input type="text" name="refrainTimeSeconds" />
   <input type='submit' value='Upload!' onclick="eachFileInDirectory"/>
+</form>  
+<br>
+<h2>Default sound</h2>
+<script>
+  
+
+
+</script>
+  <!-- Play Pause Stop buttons -->
+<button onclick=" AudioControl(1)" >Play</button>
+<button onclick=" AudioControl(2)" >Pause</button>
+<button onclick=" AudioControl(3)" >Quit</button>
+
+<h2>Refrain / Beatdrop</h2>
+<button onclick=" AudioControl(4)" >Play</button>
+<button onclick=" AudioControl(5)" >Pause</button>
 
