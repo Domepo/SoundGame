@@ -5,6 +5,8 @@ const fileUpload = require('express-fileupload');
 const path = require('path');
 const fs = require('fs');
 const audioControl = require('./modules/audio-control');
+const { request } = require("http");
+const { response } = require("express");
 
 // run express server
 app.listen(8080, ()=>console.log("server is running"));
@@ -19,7 +21,7 @@ const store = require('data-store')({ path: process.cwd() + '/song-properties.js
 const filename = "audio/dadi.mp3" ;
 
 // get the button state
-app.post("/api",(request, response)=>{
+app.post("/audio-controll",(request, response)=>{
     let HTMLbuttonState = request.body.name;
     if(HTMLbuttonState == 1){
         audioControl.play(filename);
@@ -36,20 +38,20 @@ app.post("/api",(request, response)=>{
 });
 
 // Upload file
-app.post('/upload', function(req, res) {
-  if (!req.files || Object.keys(req.files).length === 0) {
-    return res.status(400).send('No files were uploaded.');
+app.post('/upload', function(request, response) {
+  if (!request.files || Object.keys(request.files).length === 0) {
+    return response.status(400).send('No files were uploaded.');
   }
-  let HTMLfileUpload = req.files.HTMLfileUpload;
-  let refrainTimeSeconds = req.body.refrainTimeSeconds;
-  let refrainTimeMinutes = req.body.refrainTimeMinutes;
+  let HTMLfileUpload = request.files.HTMLfileUpload;
+  let refrainTimeSeconds = request.body.refrainTimeSeconds;
+  let refrainTimeMinutes = request.body.refrainTimeMinutes;
 
   HTMLfileUpload.mv('audio/'+HTMLfileUpload.name, function(err) {
   // audio directory with all the song files
     if (err){
-      return res.status(500).send(err);
+      return response.status(500).send(err);
     }
-    res.send('File uploaded!');
+    response.send('File uploaded!');
     // Store the Song-properties in the JSON file
     uploadStorage(HTMLfileUpload,refrainTimeSeconds,refrainTimeMinutes)
   });
@@ -86,4 +88,14 @@ fs.readdir(directoryPath, function (err, files) {
     app.post("/dir",(request, response)=>{
       response.send({files});
   });
+});
+
+// read every name of songs in song-properties.json 
+fs.readFile('song-properties.json', (err, data) => {
+    if (err) throw err;
+    let jsonData = JSON.parse(data);
+    let NameOfSongsInJson = (Object.keys(jsonData));
+    app.post("/dir/json",(request, response)=>{
+      response.send(NameOfSongsInJson);
+    })
 });
