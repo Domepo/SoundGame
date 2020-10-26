@@ -23,36 +23,9 @@ encType="multipart/form-data">
 <br>
 <h2>Default sound</h2>
 
-<select id="ddlViewBy">
-  <option value="1">test1</option>
-  <option value="2" selected="selected">test2</option>
-  <option value="3">test3</option>
-</select>
 
-<script>
+<script src="selector.js"> </script>
 
-  
-    songProperties()
-    .then(response =>{
-            console.log(response.length);         
-    });
-
-let a = document.createElement("div");
-let b = document.createElement("select")
-let c = document.createElement("option")
-
-
-b.setAttribute("id","test");
-
-document.body.appendChild(a);
-a.appendChild(b);
-b.appendChild(c);
-
-c.innerHTML = "a";
-
-
-
-</script>
   <!-- Play Pause Stop buttons -->
 <button onclick=" AudioControl(1)" >Play</button>
 <button onclick=" AudioControl(2)" >Pause</button>
