@@ -1,4 +1,4 @@
-
+// create the select option menu in HTML
 function createSelectOptionHTML(){
   
     songProperties()
@@ -14,7 +14,7 @@ function createSelectOptionHTML(){
             createOption.innerHTML = String(element);
   
             createSelect.setAttribute("id","selector");
-            createSelect.setAttribute("onchange","selectListener()");
+            createSelect.setAttribute("onchange","selectListenerPush()");
   
             createDiv.setAttribute("name","selectorDiv");
             createOption.setAttribute("value",String(element));
@@ -27,10 +27,20 @@ function createSelectOptionHTML(){
       });
   }
   
-  function selectListener(){
+// Push the menu value via api
+async function selectListenerPush(){
     let selectorID = document.getElementById("selector");
     let selectorResult = selectorID.options[selectorID.selectedIndex].value;
-    console.log(selectorResult);
-  }
-  
-  createSelectOptionHTML();
+    await fetch("/dir/json/return",{
+            method: "POST",
+            headers:{
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: selectorResult
+            })
+        })
+        .catch((err)=>console.log(err));
+};
+    
+createSelectOptionHTML();
