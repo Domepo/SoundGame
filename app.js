@@ -37,6 +37,10 @@ app.post("/audio-controll",(request, response)=>{
 
 });
 
+
+
+
+
 // Upload file
 app.post('/upload', function(request, response) {
   if (!request.files || Object.keys(request.files).length === 0) {
@@ -94,8 +98,16 @@ fs.readdir(directoryPath, function (err, files) {
 fs.readFile('song-properties.json', (err, data) => {
     if (err) throw err;
     let jsonData = JSON.parse(data);
+    console.log(jsonData.name);
     let NameOfSongsInJson = (Object.keys(jsonData));
     app.post("/dir/json",(request, response)=>{
       response.send(NameOfSongsInJson);
     })
+});
+
+// get the select menu value
+app.post("/dir/json/return",(request, response)=>{
+  let HTMLbuttonState = request.body.name;
+  console.log(HTMLbuttonState+"  pushed from the frontend");
+  return response.send("something");
 });
