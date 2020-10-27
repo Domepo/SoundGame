@@ -7,6 +7,7 @@ const fs = require('fs');
 const audioControl = require('./modules/audio-control');
 const { request } = require("http");
 const { response } = require("express");
+const { resolve } = require("path");
 
 // run express server
 app.listen(8080, ()=>console.log("server is running"));
@@ -20,26 +21,23 @@ const store = require('data-store')({ path: process.cwd() + '/song-properties.js
 
 const filename = "audio/dadi.mp3" ;
 
+
+
 // get the button state
 app.post("/audio-controll",(request, response)=>{
-    let HTMLbuttonState = request.body.name;
-    if(HTMLbuttonState == 1){
-        audioControl.play(filename);
-        console.log("Play");
-    }
-    if(HTMLbuttonState == 2){
-        audioControl.pause(filename);
-        console.log("Pause");
-    }
-    // if you return nothing, you`ll have 
-    // perfomance issues and some errors
-    return response.send("something");
-
+  let HTMLbuttonState = request.body.name;
+  if(HTMLbuttonState == 1){
+      audioControl.play(filename);
+      console.log("Play");
+  }
+  if(HTMLbuttonState == 2){
+      audioControl.pause(filename);
+      console.log("Pause");
+  }
+  // if you return nothing, you`ll have 
+  // perfomance issues and some errors
+  return response.send("something");
 });
-
-
-
-
 
 // Upload file
 app.post('/upload', function(request, response) {
@@ -62,15 +60,18 @@ app.post('/upload', function(request, response) {
 });
 
 
+
+
 function uploadStorage(file,seconds,minutes){
-    let FileNameWithoutExtension = file.name.split('.').slice(0, -1).join('.');
-    store.set(String(FileNameWithoutExtension)); 
-    store.set(String(FileNameWithoutExtension)+".refrainDrop"); 
-    store.set(String(FileNameWithoutExtension)+".refrainDrop.Minutes", String(minutes)); 
-    store.set(String(FileNameWithoutExtension)+".refrainDrop.Seconds", String(seconds)); 
-    store.set(String(FileNameWithoutExtension)+".refrainDrop.ResolutionDuration",String(resultionCalculator(seconds,minutes)));
-    store.set(String(FileNameWithoutExtension)+".name", String(file.name)); 
+  let FileNameWithoutExtension = file.name.split('.').slice(0, -1).join('.');
+  store.set(String(FileNameWithoutExtension)); 
+  store.set(String(FileNameWithoutExtension)+".refrainDrop"); 
+  store.set(String(FileNameWithoutExtension)+".refrainDrop.Minutes", String(minutes)); 
+  store.set(String(FileNameWithoutExtension)+".refrainDrop.Seconds", String(seconds)); 
+  store.set(String(FileNameWithoutExtension)+".refrainDrop.ResolutionDuration",String(resultionCalculator(seconds,minutes)));
+  store.set(String(FileNameWithoutExtension)+".name", String(file.name)); 
 }
+
 function resultionCalculator(seconds,minutes){
   // One frame = 0.026 seconds
   // We use the default 44khz audio sequenze
@@ -96,18 +97,32 @@ fs.readdir(directoryPath, function (err, files) {
 
 // read every name of songs in song-properties.json 
 fs.readFile('song-properties.json', (err, data) => {
-    if (err) throw err;
+  if (err) {
+    return console.log('Unable to read JSON: ' + err);
+    } 
     let jsonData = JSON.parse(data);
-    console.log(jsonData.name);
     let NameOfSongsInJson = (Object.keys(jsonData));
+    let allNameOfSongsInJsonWithExtansion = [];
+
+    NameOfSongsInJson.forEach(element => {
+      let extansionPath = jsonData[element].name;
+      allNameOfSongsInJsonWithExtansion.push(extansionPath);
+    });
+
     app.post("/dir/json",(request, response)=>{
-      response.send(NameOfSongsInJson);
+      response.send(allNameOfSongsInJsonWithExtansion);
     })
 });
 
 // get the select menu value
+
+
 app.post("/dir/json/return",(request, response)=>{
-  let HTMLbuttonState = request.body.name;
-  console.log(HTMLbuttonState+"  pushed from the frontend");
-  return response.send("something");
+
+  let HTMLbuttonStatea = request.body.name;
+  let audioFile = "audio/"+HTMLbuttonStatea;
+      // get the button state
+  console.log(audioFile);
+  response.send("something");
+
 });
