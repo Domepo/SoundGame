@@ -52,4 +52,5 @@ async function AudioControl(state){
     const songPropertiesProm = songProperties()
     .then(response =>{
             console.log(response);
+            return response;
     });
