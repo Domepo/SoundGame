@@ -37,16 +37,7 @@ function createSelectOptionHTML(){
 async function selectListenerPush(){
   let selectorID = document.getElementById("selector");
   let selectorResult = selectorID.options[selectorID.selectedIndex].value;
-  await fetch("/dir/json/return",{
-          method: "POST",
-          headers:{
-              "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-              name: selectorResult
-          })
-      })
-      .catch((err)=>console.log(err));
+  return selectorResult;
 };
   
 createSelectOptionHTML();
