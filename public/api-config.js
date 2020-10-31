@@ -36,8 +36,13 @@ const eachFileInDirectory = FilesInDirectory()
 .then(response =>{
         let ShowDirectoryElement = document.getElementById("showdirectory");
         console.log(response.length+" files are Uploaded");
+
+        if(response[1] === undefined){
+            ShowDirectoryElement.innerHTML ="Upload your file";
+        }else{
         ShowDirectoryElement.innerHTML = response[1];
-});
+        }
+    });
 
 
 // get data from song-properties.json
