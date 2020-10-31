@@ -1,43 +1,64 @@
-// create the select option menu in HTML
-function createSelectOptionHTML(){
-  
-  songProperties()
-    .then(response =>{
-      let createDiv    = document.createElement("div");
-      let createSelect = document.createElement("select");
-      let createBlankOption = document.createElement("option");
-      createBlankOption.setAttribute("style","display:none;");
+// API config
+// fetch button and text data
 
-      createBlankOption.innerHTML = "Select a song";
+async function AudioControl(state){
+    // get the button data for play pause and stop
+    // get the return of selector.js
+    const selectorResult = await selectListenerPush();
+    await fetch("/audio-controll",{
+            method: "POST",
+            headers:{
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                ButtonState: state,
+                SelectedSong: selectorResult
+            })
+        })
+        .catch((err)=>console.log(err));
+    };
 
-      document.body.appendChild(createDiv);
-      createDiv.appendChild(createSelect);
-      createSelect.appendChild(createBlankOption);
-
-      console.log(response.length);
-      response.forEach(element => {
-
-          let createOption = document.createElement("option");
-
-          createOption.innerHTML = String(element);
-
-          createSelect.setAttribute("id","selector");
-          createSelect.setAttribute("onchange","selectListenerPush()");
-
-          createDiv.setAttribute("name","selectorDiv");
-          createOption.setAttribute("value",String(element));
-
-          createSelect.appendChild(createOption);
-          
-      });         
-    });
-}
-
-// Push the menu value via api
-async function selectListenerPush(){
-  let selectorID = document.getElementById("selector");
-  let selectorResult = selectorID.options[selectorID.selectedIndex].value;
-  return selectorResult;
+async function FilesInDirectory(){
+    // get all uploaded files
+    const response = await fetch("/dir",{
+            method: "POST",
+            headers:{
+                "Content-Type": "application/json"
+            }
+        })
+    const responseArray = await response.json();
+    const responseFiles = responseArray.files;
+    return responseFiles;
 };
-  
-createSelectOptionHTML();
+
+const eachFileInDirectory = FilesInDirectory()
+// get the latest file in the directoryPath -> ./app.js
+.then(response =>{
+        let ShowDirectoryElement = document.getElementById("showdirectory");
+        console.log(response.length+" files are Uploaded");
+
+        if(response[1] === undefined){
+            ShowDirectoryElement.innerHTML ="Upload your file";
+        }else{
+        ShowDirectoryElement.innerHTML = response[1];
+        }
+    });
+
+
+// get data from song-properties.json
+async function songProperties(){
+    const response = await fetch("/dir/json",{
+            method: "POST",
+            headers:{
+                "Content-Type": "application/json"
+            }
+        })
+    const responseArray = await response.json();
+    return responseArray;
+};
+
+const songPropertiesProm = songProperties()
+.then(response =>{
+        console.log(response);
+        return response;
+});
