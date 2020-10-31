@@ -5,6 +5,7 @@ const fileUpload = require('express-fileupload');
 const path = require('path');
 const fs = require('fs');
 const audioControl = require('./modules/audio-control');
+const store = require('data-store')({ path: process.cwd() + '/song-properties.json' });
 const { request } = require("http");
 const { response } = require("express");
 const { resolve } = require("path");
@@ -17,21 +18,22 @@ app.use(express.json({limit: '10mb'}));
 
 // fileUpload config
 app.use(fileUpload());
-const store = require('data-store')({ path: process.cwd() + '/song-properties.json' });
 
 const filename = "audio/dadi.mp3" ;
 
-
-
 // get the button state
 app.post("/audio-controll",(request, response)=>{
-  let HTMLbuttonState = request.body.name;
+
+  let HTMLbuttonState = request.body.ButtonState;
+  let SelectedSong    = request.body.SelectedSong;
+  let audioFile = "audio/"+SelectedSong;
+  console.log(HTMLbuttonState);
   if(HTMLbuttonState == 1){
-      audioControl.play(filename);
+      audioControl.play(audioFile);
       console.log("Play");
   }
   if(HTMLbuttonState == 2){
-      audioControl.pause(filename);
+      audioControl.pause(audioFile);
       console.log("Pause");
   }
   // if you return nothing, you`ll have 
@@ -115,14 +117,3 @@ fs.readFile('song-properties.json', (err, data) => {
 });
 
 // get the select menu value
-
-
-app.post("/dir/json/return",(request, response)=>{
-
-  let HTMLbuttonStatea = request.body.name;
-  let audioFile = "audio/"+HTMLbuttonStatea;
-      // get the button state
-  console.log(audioFile);
-  response.send("something");
-
-});
